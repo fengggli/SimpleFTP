@@ -11,22 +11,55 @@ Description:
 
 Make:
     run 'make' in the package root directory
+    this makefile will download some files in the server side so that client can download with the path:
+        data/a1.pdf
+        data/a2.pdf
+        data/a3.pdf
 
 quick run:
+    !!! there is a example input and outout in the file Results.txt, which will give more details on how this program works
+
     AFTER MAKE:
-    In the server machine:
+    In the server machine:(You can define the server port in the script)
+        cd server
         chmod +x ./run_server.sh
-        ./run_server.shh
-    In the client machine
+        ./run_server.sh
+
+    In the client machine(You can define the server port and address in the run_client.sh script)
+        cd client
         chmod +x ./run_client.sh
         ./run_client.sh
+
+        register or login following the prompted information
+
+        For testing single file functionality, when system asks for file path, type:
+            data/a1.pdf
+
+        For testing the multi-file functionality, when system asks for file path: type:
+            data/a1.pdf data/a2.pdf data/a3.pdf
+
+    After testing the client, you can also run client with manually-made corruption. 
+    In the client machine(You can define the server port and address in the run_client_corrupted.sh script)
+        cd client_corrupted
+        chmod +x ./run_client_corrupted.sh
+        ./run_client_client_corrupted.sh
+
+        register or login following the prompted information
+
+        For testing single file functionality, when system asks for file path, type:
+            data/a1.pdf
+
+        For testing the multi-file functionality, when system asks for file path: type:
+            data/a1.pdf data/a2.pdf data/a3.pdf
+
+    
 
 Notes:
     1. when the client is asked for path, the path will be a relative path from server/. For example if you input data/a1.pdf, the server will transfer data/a1.pdf to client's working directory
     
-    2. In my current implementation, after each file transfering, checksum will be calculated and compared with the original checksum, if not correct, client will get a warning
+    2. In my current implementation, after each file transfering. For each file if checksum is not correct, there will be 3 retries. If all the retris fail, client will get disconnected
     
-    3. To test functionality of checksum, we can create some corruption in file by uncomment the LINE 42 in src/dataTransform.java :
+    3. To test functionality of checksum, I add some synthetic corruption in  src/corruption/dataTransform.java :
         buf[0] = (byte)!buf[0]
         which will inverse the first byte of each buffer read. 
     
@@ -42,6 +75,7 @@ the program works in this way:
       transfer data(using encrypted stream)
       close socket(data)
       checksum verify
+      if any error happens close connection and client exit
   5. if all files are verified, need more files?
       yes: go to 2
       no: exit
