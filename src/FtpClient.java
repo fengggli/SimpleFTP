@@ -75,11 +75,7 @@ public class FtpClient {
 
                             // check file
                             String receivedChecksum = dt.createChecksum(receivePath);
-                            if (count == -1) {
-                                // if fail to receive the file
-                                System.out.println("    receive transferring error");
-                                break;
-                            } else if (receivedChecksum == checksum) {
+                            if (receivedChecksum.equals(checksum) == false) {
                                 System.out.println("    checksum not correct!");
                                 System.out.println("    should be:" + checksum);
                                 System.out.println("    but now is:" + receivedChecksum);
@@ -87,7 +83,7 @@ public class FtpClient {
 
                             } else {
                                 System.out.println("    File No." + (numReceived + 1) + " of " + numFiles + " files: " + fileName
-                                        + " is downloaded and checksum verified. (" + count + " bytes read)\n");
+                                        + " is downloaded and checksum " +checksum + " verified. (" + count + " bytes read)\n");
                             }
 
                         } catch (Exception e) {

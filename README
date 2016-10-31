@@ -13,23 +13,24 @@ Make:
     run 'make' in the package root directory
 
 quick run:
-    this will generate all the tasks and store the results in "results/summary"
     AFTER MAKE:
-        chmod +x ./run.sh
-        ./run.sh
+    In the server machine:
+        chmod +x ./run_server.sh
+        ./run_server.shh
+    In the client machine
+        chmod +x ./run_client.sh
+        ./run_client.sh
 
-Output:
-    results will be stored in
-
-    where:
-
-    meaning:
-
-
-Log files:
-
---------------------------------------------------------------------------------------------
-
+Notes:
+    1. when the client is asked for path, the path will be a relative path from server/. For example if you input data/a1.pdf, the server will transfer data/a1.pdf to client's working directory
+    
+    2. In my current implementation, after each file transfering, checksum will be calculated and compared with the original checksum, if not correct, client will get a warning
+    
+    3. To test functionality of checksum, we can create some corruption in file by uncomment the LINE 42 in src/dataTransform.java :
+        buf[0] = (byte)!buf[0]
+        which will inverse the first byte of each buffer read. 
+    
+    
 the program works in this way:
   0.create socket(control)
   1.authorization

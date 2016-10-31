@@ -118,7 +118,7 @@ public class FtpServer {
                 System.out.println("Exception when creating encryption");
                 System.out.println(e.getMessage());
             }
-            System.out.println("client exist, server keep listening... CTL+C to terminate server process");
+            System.out.println("client exit, server keep listening... CTL+C to terminate server process");
         }
     }
 }

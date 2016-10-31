@@ -102,7 +102,7 @@ public class FtpProtocol {
             boolean allFileExist = true;
 
             while (tokenizer.hasMoreTokens()) {
-                Path filePath = Paths.get("data/" + tokenizer.nextToken());
+                Path filePath = Paths.get(tokenizer.nextToken());
                 if (exists(filePath)) {
                     allPaths = allPaths + " " + theInput;
                     numFiles += 1;

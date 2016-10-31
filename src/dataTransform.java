@@ -38,6 +38,9 @@ public class dataTransform {
         int numRead = 0;
         int totalRead = 0;
         while ((numRead = in.read(buf)) >= 0) {
+            // ucomment the following line if you want add  corruption here!
+            //buf[0] = (byte)~buf[0];
+
             out.write(buf, 0, numRead);
             totalRead += numRead;
         }
