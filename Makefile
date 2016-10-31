@@ -18,7 +18,7 @@ CORRUPTED_TRANSFER_PART=src/corrupted/dataTransform.java
 
 all: server client corrupted_client
 
-server: src/FtpServer.java src/FtpProtocol.java src/UserDB.java
+server: src/FtpServer.java src/FtpProtocol.java src/UserDB.java default
 	javac $(SERVER_PART) $(TRANSFER_PART) -d $(BIN_SERVER)
 	## also add some test files
 	wget http://cs.iupui.edu/~rraje/html/53700-16/a1.pdf -O server/data/a1.pdf
