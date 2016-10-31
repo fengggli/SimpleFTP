@@ -102,7 +102,7 @@ public class FtpProtocol {
             boolean allFileExist = true;
 
             while (tokenizer.hasMoreTokens()) {
-                Path filePath = Paths.get(tokenizer.nextToken());
+                Path filePath = Paths.get("data/" + tokenizer.nextToken());
                 if (exists(filePath)) {
                     allPaths = allPaths + " " + theInput;
                     numFiles += 1;
@@ -119,13 +119,13 @@ public class FtpProtocol {
                 theOutput = "#send " + numFiles + allPaths;
                 state = FileSent;
             }else {
-                theOutput  = wrongPath + ", input paths again!";
+                theOutput  = wrongPath + ", input paths again!, or CTL-C to exit";
             }
         }
         else if(state == FileSent){
             if(theInput.startsWith("#ack")){
 
-                theOutput = "file transferred, 1.another transfer 2. exist";
+                theOutput = "file transferred, 1.another transfer 2. exit";
                 System.out.println("get ack from client");
                 state = FileAck;
             }
@@ -143,7 +143,7 @@ public class FtpProtocol {
                 state = WAITING;
             }
         } else {
-            theOutput = "server internal error. now exist. Bye.";
+            theOutput = "server internal error. now exit. Bye.";
             state = WAITING;
         }
 

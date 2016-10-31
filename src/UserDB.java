@@ -22,7 +22,7 @@ public class UserDB {
     }
     public boolean insertNewUser(String username, String passwd){
         if(checkUserName(username) == true){
-            System.out.println("User "+ username + " not created");
+            //System.out.println("User "+ username + " not created");
             return false;
         }
         System.out.println("User "+ username + " created");
@@ -31,7 +31,7 @@ public class UserDB {
     }
     public boolean checkPasswd(String username, String passwd){
         if(userDic.get(username).equals(passwd)){
-            System.out.println("user " + username + " exists");
+            //System.out.println("user " + username + " exists");
             return true;
 
         }

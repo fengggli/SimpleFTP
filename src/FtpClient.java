@@ -16,7 +16,7 @@ public class FtpClient {
 
         if (args.length != 2) {
             System.err.println(
-                    "Usage: java EchoClient <host name> <port number>");
+                    "Usage: java FtpClient <host name> <port number>");
             System.exit(1);
         }
 
@@ -59,7 +59,7 @@ public class FtpClient {
                         long fileLength = Long.parseLong(tokenizerFile.nextToken());
                         String checksum = tokenizerFile.nextToken();
 
-                        String receivePath = "client/data/" + fileName;
+                        String receivePath = "./" + fileName;
                         // get the file content
                         try (
                                 // a new socket for data transfer

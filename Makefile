@@ -1,14 +1,24 @@
 JFLAGS = -g -d server
 JC = javac
 
-all:default
-	javac  server/*.java  client/*.java
+BIN_SERVER=server
+BIN_CLIENT=client
+
+SERVER_PART=src/FtpServer.java \
+			src/FtpProtocol.java \
+			src/UserDB.java 
+TRANSFER_PART=src/dataTransform.java
+CLIENT_PART=src/FtpClient.java
+
+
+all:
+	javac $(SERVER_PART) $(TRANSFER_PART) -d $(BIN_SERVER)
+	javac $(CLIENT_PART) $(TRANSFER_PART) -d $(BIN_CLIENT)
 
 default: 
-	mkdir -p data
-	mkdir -p client/data
+	mkdir -p $(BIN_SERVER)/data
+
 
 clean:
-	$(RM) server/*.class
-	$(RM) client/*.class
-	$(RM) client/data/*
+	$(RM) $(BIN_SERVER)/*.class
+	$(RM) -rf $(BIN_CLIENT)/*.class
