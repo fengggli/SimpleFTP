@@ -1,0 +1,47 @@
+Simple FTP implementation in java
+    --program 2 in CSCI 53700, Distributed System in IUPUI
+
+Author:Feng Li
+Time: Oct 26, 2016
+
+
+Description:
+    This is a simple implementation of FTP protocol. User authorization, data encryption, checksum verification are included.
+
+
+Make:
+    run 'make' in the package root directory
+
+quick run:
+    this will generate all the tasks and store the results in "results/summary"
+    AFTER MAKE:
+        chmod +x ./run.sh
+        ./run.sh
+
+Output:
+    results will be stored in
+
+    where:
+
+    meaning:
+
+
+Log files:
+
+--------------------------------------------------------------------------------------------
+
+the program works in this way:
+  0.create socket(control)
+  1.authorization
+  2.send file path to server
+  3.receive reply from server
+  4.for each file
+      create socket(data)
+      transfer file information(length, checksum)
+      transfer data(using encrypted stream)
+      close socket(data)
+      checksum verify
+  5. if all files are verified, need more files?
+      yes: go to 2
+      no: exit
+
