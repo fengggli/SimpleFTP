@@ -125,7 +125,7 @@ public class FtpProtocol {
         else if(state == FileSent){
             if(theInput.startsWith("#ack")){
 
-                theOutput = "file transferred, 1.another transfer 2. exit";
+                theOutput = "completed, 1.another transfer 2. exit";
                 System.out.println("get ack from client");
                 state = FileAck;
             }

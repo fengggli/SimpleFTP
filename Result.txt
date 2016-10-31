@@ -1,58 +1,95 @@
-Server side:
-    lifen@in-csci-rrpc01:~/Workspace/simpleFTP/server$./run_server.sh 
-    start the server at port 1993
-    client get connected!
-    User lifeng created
-    Send file a1.pdf with 110628 bytes
-    get ack from client
-    Send file a1.pdf with 110628 bytes
-    Send file a2.pdf with 57817 bytes
-    Send file a3.pdf with 64880 bytes
-    get ack from client
-    client exit, server keep listening... CTL+C to terminate server process
+Correct Tranmission:
+    Server side:
+        lifen@in-csci-rrpc01:~/Workspace/simpleFTP/server$./run_server.sh 
+        start the server at port 1993
+        client get connected!
+        User lifeng created
+        Send file a1.pdf with 110628 bytes
+        Send file a2.pdf with 57817 bytes
+        Send file a3.pdf with 64880 bytes
+        get ack from client
+        Send file a1.pdf with 110628 bytes
+        get ack from client
+        client exit, server keep listening... CTL+C to terminate server process
 
-Correct transfer:
-    lifen@in-csci-rrpc02:~/Workspace/simpleFTP/client$./run_client.sh 
-    Server: welcome!1: Login   2: Register 3: exit
-    2
-    Server: name to register?
-    lifeng
-    Server: password?
-    123456
-    Server: You are now registered! 1. login 2. register 3. exit
-    1
-    Server: name to login?
-    lifeng
-    Server: password?
-    lf921227
-    Server: Password not correct, 1.Login, 2.register 3. exit
-    1
-    Server: name to login?
-    lifeng
-    Server: password?
-    123456
-    Server: Login succeed, filepath to download?
-    wrongpath
-    Server: file wrongpath not exit! , input paths again!, or CTL-C to exit
-    data/a1.pdf
-    start receiving a1.pdf
-        File No.1 of 1 files: a1.pdf is downloaded and checksum feeff80a48545002ed5807c1603e8f85 verified. (110628 bytes read)
+    Client side:
+        lifen@in-csci-rrpc02:~/Workspace/simpleFTP/client$./run_client.sh 
+        Server: welcome!1: Login   2: Register 3: exit
+        2
+        Server: name to register?
+        lifeng
+        Server: password?
+        123456
+        Server: You are now registered! 1. login 2. register 3. exit
+        1
+        Server: name to login?
+        lifeng
+        Server: password?
+        abfesf
+        Server: Password not correct, 1.Login, 2.register 3. exit
+        1
+        Server: name to login?
+        lifeng
+        Server: password?
+        123456
+        Server: Login succeed, filepath to download?
+        data/a1.pdf data/a2.pdf data/a3.pdf
+        start receiving a1.pdf
+            File No.1 of 3 files: a1.pdf is downloaded and checksum feeff80a48545002ed5807c1603e8f85 verified. (110628 bytes read)
 
-    Server: file transferred, 1.another transfer 2. exit
-    1
-    Server: path?
-    data/a1.pdf data/a2.pdf data/a3.pdf
-    start receiving a1.pdf
-        File No.1 of 3 files: a1.pdf is downloaded and checksum feeff80a48545002ed5807c1603e8f85 verified. (110628 bytes read)
+        start receiving a2.pdf
+            File No.2 of 3 files: a2.pdf is downloaded and checksum 76be3eeffd01bede0630e9c7eb7658ca verified. (57817 bytes read)
 
-    start receiving a2.pdf
-        File No.2 of 3 files: a2.pdf is downloaded and checksum 76be3eeffd01bede0630e9c7eb7658ca verified. (57817 bytes read)
+        start receiving a3.pdf
+            File No.3 of 3 files: a3.pdf is downloaded and checksum 285c394333ac8cca107eaf18568af851 verified. (64880 bytes read)
 
-    start receiving a3.pdf
-        File No.3 of 3 files: a3.pdf is downloaded and checksum 285c394333ac8cca107eaf18568af851 verified. (64880 bytes read)
+        Server: completed, 1.another transfer 2. exit
+        1
+        Server: path?
+        data/a1.pdf
+        start receiving a1.pdf
+            File No.1 of 1 files: a1.pdf is downloaded and checksum feeff80a48545002ed5807c1603e8f85 verified. (110628 bytes read)
 
-    Server: file transferred, 1.another transfer 2. exit
-    2
+        Server: completed, 1.another transfer 2. exit
+        2
 
-Corrupted Transfer:Server
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Corrupted Transmission:
+    Server side:(cotinue after the output for the correct transmission, server is not down when transfer failure happens))
+        client get connected!
+        Send file a1.pdf with 110628 bytes
+        Send file a1.pdf with 110628 bytes
+        Send file a1.pdf with 110628 bytes
+        Exception when creating encryption
+        Connection reset
+        client exit, server keep listening... CTL+C to terminate server process
+
+    Client side:
+        lifen@in-csci-rrpc02:~/Workspace/simpleFTP/client_corrupted$./run_client_corrupted.sh 
+        Server: welcome!1: Login   2: Register 3: exit
+        1
+        Server: name to login?
+        lifeng
+        Server: password?
+        123456
+        Server: Login succeed, filepath to download?
+        data/a1.pdf
+        start receiving a1.pdf
+            checksum not correct!
+            should be:feeff80a48545002ed5807c1603e8f85
+            but now is:236cc61f3657d573f3ea947f640d7cb7
+        retry for the 1 time
+        start receiving a1.pdf
+            checksum not correct!
+            should be:feeff80a48545002ed5807c1603e8f85
+            but now is:236cc61f3657d573f3ea947f640d7cb7
+        retry for the 2 time
+        start receiving a1.pdf
+            checksum not correct!
+            should be:feeff80a48545002ed5807c1603e8f85
+            but now is:236cc61f3657d573f3ea947f640d7cb7
+        retry for the 3 time
+            File No.1 of 1 files: a1.pdf sending failure after 3 tries
+        transmission error happens, now exit
+                
 

@@ -47,6 +47,7 @@ public class FtpClient {
                     String header = tokenizer.nextToken();
                     int numFiles = Integer.parseInt(tokenizer.nextToken());
 
+                    int numCorrect = 0;
                     int numReceived;
                     for (numReceived = 0; numReceived < numFiles; numReceived++) {
                         // read a new line
@@ -60,42 +61,64 @@ public class FtpClient {
                         String checksum = tokenizerFile.nextToken();
 
                         String receivePath = "./" + fileName;
+
+                        int maxTries = 3;
+                        int numTries = 0;
+                        boolean fileSent = false;
+                      
+                        int count = 0;
+                        while(numTries < maxTries){
                         // get the file content
-                        try (
-                                // a new socket for data transfer
-                                Socket socketData = new Socket(hostName, 3434);
-                                InputStream isData = socketData.getInputStream();
-                                OutputStream fos = new FileOutputStream(receivePath);
-                        ) {
-                            System.out.println("start receiving " + fileName);
-                            dataTransform dt = new dataTransform();
-                            int count = dataTransform.decrypt(isData, fos, "password12345678");
-                            //int count = dt.myReceive(isData, fos, fileLength);
-                            fos.close();
+                            try (
+                                    // a new socket for data transfer
+                                    Socket socketData = new Socket(hostName, 3434);
+                                    InputStream isData = socketData.getInputStream();
+                                    OutputStream fos = new FileOutputStream(receivePath);
+                            ) {
+                                System.out.println("start receiving " + fileName);
+                                dataTransform dt = new dataTransform();
+                                count = dataTransform.decrypt(isData, fos, "password12345678");
+                                //int count = dt.myReceive(isData, fos, fileLength);
+                                fos.close();
 
-                            // check file
-                            String receivedChecksum = dt.createChecksum(receivePath);
-                            if (receivedChecksum.equals(checksum) == false) {
-                                System.out.println("    checksum not correct!");
-                                System.out.println("    should be:" + checksum);
-                                System.out.println("    but now is:" + receivedChecksum);
-                                break;
+                                // check file
+                                String receivedChecksum = dt.createChecksum(receivePath);
+                                if (receivedChecksum.equals(checksum) == false) {
+                                    System.out.println("    checksum not correct!");
+                                    System.out.println("    should be:" + checksum);
+                                    System.out.println("    but now is:" + receivedChecksum);
+                                    System.out.println("retry for the " + (numTries+1) + " time");
+                                    out.println("errorfile");
 
-                            } else {
-                                System.out.println("    File No." + (numReceived + 1) + " of " + numFiles + " files: " + fileName
-                                        + " is downloaded and checksum " +checksum + " verified. (" + count + " bytes read)\n");
+                                } else {
+                                    out.println("ackfile");
+                                    fileSent = true;
+                                    break;
+                                }
+
+                            } catch (Exception e) {
+                                System.out.println("Exception when Receive the file");
+                                e.printStackTrace(System.out);
                             }
-
-                        } catch (Exception e) {
-                            System.out.println("Exception when Receive the file");
-                            e.printStackTrace(System.out);
+                            numTries += 1;
+                        }
+                        if(fileSent == true){
+                            System.out.println("    File No." + (numReceived + 1) + " of " + numFiles + " files: " + fileName
+                                            + " is downloaded and checksum " +checksum + " verified. (" + count + " bytes read)\n");
+                            numCorrect +=1 ;
+                        }else{
+                            System.out.println("    File No." + (numReceived + 1) + " of " + numFiles + " files: " + fileName
+                                            + " sending failure after " + numTries + " tries");
+                            // also close the socket connection
                         }
                     }
 
-                    if (numReceived == numFiles) {
+                    if (numCorrect == numFiles) {
                         out.println("#ack");
                     } else {
                         out.println("#err");
+                        System.out.println("transmission error happens, now exit");
+                        System.exit(-1);
                     }
 
                 } else {

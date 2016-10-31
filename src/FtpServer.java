@@ -61,6 +61,7 @@ public class FtpServer {
 
                         dataTransform dt = new dataTransform();
 
+
                         for (int i = 0; i < numFiles; i++) {
                             // send all the  files
                             filePath = tokenizer.nextToken();
@@ -69,6 +70,8 @@ public class FtpServer {
                             fileName = f.getName();
                             long length = f.length();
                             String checksum;
+                            String ackString;
+                            boolean fileSent = false;
 
 
                             try {
@@ -83,30 +86,41 @@ public class FtpServer {
                                 System.out.println(e.getMessage());
                             }
 
+                            int maxTries = 3;
+                            int numTries = 0;
+                            while(numTries < maxTries){
 
-                            // then we can start to send file
-                            try (
-                                    // create a new socket for data transfer
-                                    Socket clientSocketData = serverSocketData.accept();
-                                    OutputStream osData = clientSocketData.getOutputStream();
 
-                                    // cypher defined here
-                                    // send file
-                                    InputStream fis = new FileInputStream(filePath);
-                            ) {
-                                int count = dataTransform.encrypt(fis, osData, "password12345678");
-                                //int count = dt.mySend(fis, osData);
-                                if (count == length) {
-                                    System.out.println("Send file " + fileName + " with " + count + " bytes");
-                                } else {
-                                    System.out.println("file length = " + Long.toString(length) + "but " + count + " bytes are sent");
+                                // then we can start to send file
+                                try (
+                                        // create a new socket for data transfer
+                                        Socket clientSocketData = serverSocketData.accept();
+                                        OutputStream osData = clientSocketData.getOutputStream();
+
+                                        // cypher defined here
+                                        // send file
+                                        InputStream fis = new FileInputStream(filePath);
+                                ) {
+                                    int count = dataTransform.encrypt(fis, osData, "password12345678");
+                                    //int count = dt.mySend(fis, osData);
+                                    if (count == length) {
+                                        System.out.println("Send file " + fileName + " with " + count + " bytes");
+                                    } else {
+                                        System.out.println("file length = " + Long.toString(length) + "but " + count + " bytes are sent");
+                                    }
+                                } catch (IOException e) {
+                                    System.out.println("IO Exception when sending file");
+                                    System.out.println(e.getMessage());
+                                } catch (Exception e) {
+                                    System.out.println("cipher Creation Exception when sending file");
+                                    System.out.println(e.getMessage());
                                 }
-                            } catch (IOException e) {
-                                System.out.println("IO Exception when sending file");
-                                System.out.println(e.getMessage());
-                            } catch (Exception e) {
-                                System.out.println("cipher Creation Exception when sending file");
-                                System.out.println(e.getMessage());
+                                ackString = in.readLine();
+                                if(ackString.equals("ackfile")){
+                                    fileSent = true;
+                                    break;
+                                }
+                                numTries += 1;
                             }
                         }
                     }
