@@ -20,6 +20,12 @@ all: server client corrupted_client
 
 server: src/FtpServer.java src/FtpProtocol.java src/UserDB.java
 	javac $(SERVER_PART) $(TRANSFER_PART) -d $(BIN_SERVER)
+	## also add some test files
+	wget http://cs.iupui.edu/~rraje/html/53700-16/a1.pdf -O server/data/a1.pdf
+	wget http://cs.iupui.edu/~rraje/html/53700-16/a2.pdf -O server/data/a3.pdf
+	wget http://cs.iupui.edu/~rraje/html/53700-16/a3.pdf -O server/data/a2.pdf
+	echo "test files are downloaded in server/data/"
+
 client: src/FtpClient.java src/dataTransform.java
 	javac $(CLIENT_PART) $(TRANSFER_PART) -d $(BIN_CLIENT)
 corrupted_client:src/FtpClient.java src/corrupted/dataTransform.java
