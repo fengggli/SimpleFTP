@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 
 /**
- * Created by lifeng on 10/26/16.
+ * Created by lifeng on 10/26/16
  * encription, check sum generation and buffer copy
  * some contents come from here: http://siberean.livejournal.com/14788.html
  */

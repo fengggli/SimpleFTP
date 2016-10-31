@@ -1,19 +1,14 @@
-JFLAGS = -g
+JFLAGS = -g -d server
 JC = javac
-.SUFFIXES: .java .class
-.java.class:
-	$(JC) $(JFLAGS) $*.java
 
-CLASSES = \
-        PO.java \
-        Main.java 
+all:default
+	javac  server/*.java  client/*.java
 
-default: classes
+default: 
 	mkdir -p data
 	mkdir -p client/data
 
-classes: $(CLASSES:.java=.class)
-
 clean:
-	$(RM) *.class
+	$(RM) server/*.class
+	$(RM) client/*.class
 	$(RM) client/data/*
